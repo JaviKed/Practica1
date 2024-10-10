@@ -21,5 +21,12 @@ Practica Docker Despliegue de aplicaciones multientorno
 
 
 # Partes del proyecto
+### El proyecto se compone de dos bases de datos de postgreSQL, una para cada entorno de la app (prod y dev)
+### Una cache de Redis que almacenera las consultas a la base de datos durante 60s para mejorar el rendimiento de la aplicación
+### Los gestores de estos componentes Adminer para las bases de datos y RedisCommander para la cache
+### Y, por último, un contenedor para cada uno de los entornos de la app de Flask
 
+# Diagrama
+### El diagrama de la arquitectura del proyecto es la siguiente:
+### ![Diagrama](https://i.imgur.com/msMeQ56.png)
 
