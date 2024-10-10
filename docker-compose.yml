@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./db:/var/lib/postgresql/data
+      - ./db_init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+  db_dev:
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./db_dev:/var/lib/postgresql/data
+      - ./db_init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+  web_dev:
+    environment:
+      FLASK_ENV: development
+    build: ./app
+    volumes:
+      - ./app:/app
+    restart: always
+    depends_on:
+      - db_dev
+    ports:
+      - "5000:5000"
+
+  web_prod:
+    environment:
+      FLASK_ENV: production
+    build: ./app
+    volumes:
+      - ./app:/app
+    restart: always
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "5001:5000"
+
+  redis:  # Servicio de Redis
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data  # Volumen para persistir los datos
+      - ./redis.conf:/usr/local/etc/redis/redis.conf  # Usa configuracion de AOF
+    command: 
+      redis-server /usr/local/etc/redis/redis.conf
+
+  adminer:
+    image: adminer
+    restart: always
+    ports: 
+      - 8080:8080
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
