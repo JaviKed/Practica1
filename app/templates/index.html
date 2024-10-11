@@ -5,22 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Items Table</title>
-    <style>
-        .status {
-            font-weight: bold;
-        }
-        .status-success {
-            color: green;
-        }
-        .status-failed {
-            color: red;
-        }
-        .error-message {
-            color: red;
-            font-weight: bold;
-        }
-        
-    </style>
+    
 </head>
 <body>
     {% if is_production %}
