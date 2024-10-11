@@ -38,3 +38,17 @@ th {
 tr:nth-child(even) {
     background-color: #f2f2f2; /* Color alternativo para filas */
 }
+.status {
+            font-weight: bold;
+        }
+.status-success {
+            color: green;
+        }
+.status-failed {
+            color: red;
+        }
+.error-message {
+            color: red;
+            font-weight: bold;
+        }
+        
