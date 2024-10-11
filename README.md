@@ -30,3 +30,19 @@ Practica Docker Despliegue de aplicaciones multientorno
 ### El diagrama de la arquitectura del proyecto es la siguiente:
 ### ![Diagrama](https://i.imgur.com/msMeQ56.png)
 
+# Pruebas realizadas
+## Cache
+### La primera prueba realizada sobre la cache ha sido la mas simple, un ping. Para ello entramos en el contenedor de la web de producción con el comando "docker-compose exec -it web_prod /bin/sh" y una vez estemos dentro de la consola realizamos el comando "redis-cli -h redis ping". Esto hará que si la cache está conectada correctamente nos devuela un PONG.
+### Y la siguiente prueba se basa en colocar manualmente contenido en la cache. Para ello con el comando "docker-compose exec -it redis redis-cli" entramos en el contenedor de la cache y con un comando SET con valor de llave "prueba" y contenido "test" "set prueba test" al realizar una peticion GET "get prueba" la cache nos devolvera "test". También se podrá comprobar en RedisCommander que se ha añadido a la cache correctamente.
+
+## Base de datos
+### Lo primero es que se produzca correctamente la ejecución del script init.sql. Simplemente, cuando se creen los contenedores, la base de datos no estará vacía, tendrá una tabla items que nos mostrará, en este caso, una tabla vacía para evitar que falle la aplicación. Esto se podrá comprobar también en Adminer.
+### Se puede también realizar pruebas para introducir manualmente datos en las bases de datos y comprobar que se actualizan correctamente en los contenedores de web, por ejemplo, introduciendo un valor de prueba y hacer un refresh para comprobar que se actualizan de manera inmediata.
+
+## Aplicacion Web
+### Las pruebas realizadas sobre la web son principalmente el Stop de los contenedores de cache y base de datos y ver si el indicador de conexion de la aplicación web se realiza de manera correcta.
+### en la producción también se ha probado la priorización de los datos de la cache (se muestran durante 60s) y que posteriormente al terminar su TTL se actualice con los datos realizados en su base de datos.
+
+## Persistencia de datos
+### Las pruebas realizadas sobre la persistencia de datos se ha realizado realizando un "docker-compose down" y comprobando que los volumenes al volver a levantar los contenedores han mantenido los últimos datos de las appweb tanto en base de datos como en cache
+
