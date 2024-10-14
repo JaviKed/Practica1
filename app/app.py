@@ -65,11 +65,15 @@ def index():
     if is_production:
         if redis_connected:
             items = cache.get('items')  # Try fetching from cache
-        if items is None:  # Cache miss
+            if items is None:  # Cache miss
+                if db_connected:
+                    items = Item.query.all()  # Fetch items if connected
+                    cache.set('items', items, timeout=60)  # Cache the result for 5 minutes
+            item_count = len(items)
+        else:
             if db_connected:
                 items = Item.query.all()  # Fetch items if connected
-                cache.set('items', items, timeout=60)  # Cache the result for 5 minutes
-        item_count = len(items)
+                item_count = Item.query.count()  # Get the count of items
         return render_template('index.html', items=items, item_count=item_count, db_connected=db_connected, is_production=is_production, redis_connected=redis_connected)
         
 
